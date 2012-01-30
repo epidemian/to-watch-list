@@ -26,7 +26,7 @@ class ToWatchView extends Backbone.View
     if $(@el).text() == ''
       $(@el).html """
         <input type="checkbox" />
-        <a class="title"></a>
+        <a class="title" target="_blank"></a>
         <p class="comment" contenteditable />
         <div class="delete" title="Delete">&#10006;</div>
         """ # TODO The entity &#10006; is "heavy multiplication x", but for some encoding problem I could not use it directly here :(
