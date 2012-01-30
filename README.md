@@ -24,6 +24,7 @@ The app still needs some major work to be something decent:
 * Detect video links (YouTube and maybe direct links to files) and play videos locally.
 * Reorder to-watch items.
 * User authentication! Now the list is shared between everyone. A simple authentication solution, like [OmniAuth](https://github.com/intridea/omniauth) could be used to associate users to to-watch lists (one list per user, private lists).
+* A control to show how many videos are left to watch and another one to remove all watched videos.
 * A little refactoring would be welcomed (especially in the .coffee, which is quite messy ATM).
 
 Pull requests and feature requests are more than welcome :)
