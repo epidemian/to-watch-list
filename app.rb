@@ -3,16 +3,18 @@ require 'sinatra'
 require 'sinatra/reloader' if development?
 require 'data_mapper'
 require 'json'
+require 'open-uri'
+require 'nokogiri'
 
 DataMapper.setup(:default, ENV['DATABASE_URL'] || 'mysql://localhost/sinatra_development')
 
-class Video
+class ToWatch
   include DataMapper::Resource
 
   property :id,         Serial
-  property :title,      String,   :default => ''
   property :comment,    Text,     :default => ''
-  property :youtube_id, String,   :required => true
+  property :link,       String,   :required => true
+  property :title,      String
   property :watched,    Boolean,  :default => false
 end
 
@@ -26,7 +28,7 @@ DataMapper.auto_upgrade!
 
 get '/' do
   erb :app, :locals => {
-      :videos => Video.all
+      :to_watch_list => ToWatch.all
   }
 end
 
@@ -38,38 +40,52 @@ get '/css/app.css' do
   sass :app
 end
 
-# REST methods for Video resource.
-post '/videos', :provides => :json do
+# REST methods for ToWatch resource.
+post '/towatch', :provides => :json do
   json = JSON.parse(request.body.read)
-  video = Video.create(json)
+  tw = ToWatch.new(json)
+  tw.title = get_title_for_link tw.link if tw.title.nil?
+  tw.save()
 
-  return 400, video.errors.to_hash.to_json unless video.valid?
-  video.to_json
+  return 400, tw.errors.to_hash.to_json unless tw.valid?
+  tw.to_json
 end
 
-get '/videos/:id', :provides => :json do
+get '/towatch/:id', :provides => :json do
   id = params[:id].to_i
-  video = Video.get id
+  tw = ToWatch.get id
 
-  return 404 if video.nil?
-  video.to_json
+  return 404 if tw.nil?
+  tw.to_json
 end
 
-put '/videos/:id', :provides => :json do
+put '/towatch/:id', :provides => :json do
   id = params[:id].to_i
-  video = Video.get(id)
+  tw = ToWatch.get(id)
   json = JSON.parse(request.body.read)
 
-  return 404 if video.nil?
+  return 404 if tw.nil?
 
-  video.update json
-  return 400, video.errors.to_hash.to_json unless video.valid?
-  video.to_json
+  tw.update json
+  return 400, tw.errors.to_hash.to_json unless tw.valid?
+  tw.to_json
 end
 
-delete '/videos/:id' do
+delete '/towatch/:id' do
   id = params[:id].to_i
-  video = Video.get(id)
-  return 404 if video.nil?
-  video.destroy
+  tw = ToWatch.get(id)
+  return 404 if tw.nil?
+  tw.destroy
+end
+
+# Return a convenient title for a link.
+def get_title_for_link link
+  begin
+    doc = Nokogiri::HTML(open(link))
+    node = doc.search('h1').first  || doc.search('title').first
+    node.xpath('.//text()').to_s.strip
+  rescue
+    # If something goes wrong, use link as a title.
+    link
+  end
 end

@@ -10,7 +10,7 @@
 <body>
 <script src="js/app.js"></script>
 <script>
-    window.app = new AppView({el:$('body'), videos: <%= videos.to_json %>});
+    window.app = new AppView({el:$('body'), toWatch: <%= to_watch_list.to_json %>});
 </script>
 </body>
 </html>
