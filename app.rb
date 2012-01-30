@@ -26,6 +26,8 @@ DataMapper.auto_upgrade!
 #Video.create :title => "Nyan Cat [original]", :youtube_id => 'QH2-TGUlwu4'
 #Video.create :title => "Another rick roll...", :comment => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', :youtube_id => 'oHg5SJYRHA0'
 
+set :default_encoding => "utf-8"
+
 get '/' do
   erb :app, :locals => {
       :to_watch_list => ToWatch.all

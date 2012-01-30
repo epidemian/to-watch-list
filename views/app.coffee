@@ -28,8 +28,8 @@ class ToWatchView extends Backbone.View
         <input type="checkbox" />
         <a class="title"></a>
         <p class="comment" contenteditable />
-        <div class="delete" title="Delete">✖</div>
-        """
+        <div class="delete" title="Delete">&#10006;</div>
+        """ # TODO The entity &#10006; is "heavy multiplication x", but for some encoding problem I could not use it directly here :(
     @$(':checkbox').prop
       'checked': watched
       'title': "Mark as #{if watched then 'unwatched' else 'watched'}"
