@@ -123,4 +123,7 @@ class window.AppView extends Backbone.View
       </div>
       <div class="credits">
         Created by <a href="https://github.com/epidemian">Demian Ferreiro</a> @ <a href="https://github.com/FDVSolutions">FDV Solutions</a>
+      </div>
+      <div class="ribbon">
+        <a href="https://github.com/epidemian/to-watch-list">Fork me on GitHub</a>
       </div>"""

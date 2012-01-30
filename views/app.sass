@@ -100,3 +100,32 @@ a
 
 .credits
   text-align: center
+
+
+// GitHub ribbon.
+@mixin transform-rotate($degs)
+  -moz-transform: rotate($degs)
+  -webkit-transform: rotate($degs)
+  -o-transform: rotate($degs)
+  -ms-transform: rotate($degs)
+  transform: rotate($degs)
+
+.ribbon
+  $color: #720
+  background-color: $color
+  overflow: hidden
+  position: absolute
+  right: -3em
+  top: 2.5em
+  @include transform-rotate(45deg)
+  box-shadow: 0 4px 10px $mid-color
+  a
+    border: 1px solid white
+    color: #fff
+    display: block
+    font: bold 81.25% 'Helvetiva Neue', Helvetica, Arial, sans-serif
+    margin: 0.05em 0 0.075em 0
+    padding: 0.5em 3.5em
+    text-align: center
+    text-decoration: none
+    text-shadow: 0 0 0.5em darken($color, 50%)
