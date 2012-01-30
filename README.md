@@ -6,7 +6,7 @@ This app is like the classic TODO list, but only for videos (therefore the name 
 Working Demo
 ------------
 
-See the app working at [here](http://to-watch.herokuapp.com/).
+See the app working [here](http://to-watch.herokuapp.com/).
 
 Development
 -----------
