@@ -17,19 +17,19 @@ class ToWatchView extends Backbone.View
     'click .delete':          'delete'
 
   initialize:->
-    @model.bind 'change', @render
-    @model.bind 'destroy', @remove
+    @model.on 'change', @render
+    @model.on 'destroy', @remove
     @render()
 
   render:=>
     watched = @model.get 'watched'
-    if $(@el).text() == ''
-      $(@el).html """
+    if @$el.text() == ''
+      @$el.html """
         <input type="checkbox" />
         <a class="title" target="_blank"></a>
         <p class="comment" contenteditable />
         <div class="delete" title="Delete">&#10006;</div>
-        """ # TODO The entity &#10006; is "heavy multiplication x", but for some encoding problem I could not use it directly here :(
+      """ # TODO The entity &#10006; is "heavy multiplication x", but for some encoding problem I could not use it directly here :(
     @$(':checkbox').prop
       'checked': watched
       'title': "Mark as #{if watched then 'unwatched' else 'watched'}"
@@ -56,11 +56,10 @@ class ToWatchView extends Backbone.View
 
   # Override Backbone's remove.
   remove:=>
-    $el = $(@el)
-    $el.hide 'fast', => $el.remove()
+    @$el.hide 'fast', => @$el.remove()
 
   fadeIn:->
-    $(@el).fadeIn 'fast'
+    @$el.fadeIn 'fast'
 
   focusComment:->
     @$('.comment').focus()
@@ -69,7 +68,7 @@ class ToWatchListView extends Backbone.View
 
   initialize:->
     @collection.each @addToWatch
-    @collection.bind 'add', @addNewToWatch
+    @collection.on 'add', @addNewToWatch
 
   addNewToWatch: (toWatch) =>
     twView = @addToWatch toWatch
@@ -78,7 +77,7 @@ class ToWatchListView extends Backbone.View
 
   addToWatch:(toWatch) =>
     twView = new ToWatchView model:toWatch
-    $(@el).prepend twView.el
+    @$el.prepend twView.el
     twView
 
 class CreateToWatchView extends Backbone.View
@@ -89,9 +88,10 @@ class CreateToWatchView extends Backbone.View
     @render()
 
   render:->
-    $(@el).html """
+    @$el.html """
       <input type="text" placeholder="Paste video link to watch later"/>
-      <span class="add">Add</span>"""
+      <span class="add">Add</span>
+    """
 
   addToWatch:->
     link = @$('input').val()
@@ -115,7 +115,7 @@ class window.AppView extends Backbone.View
     new ToWatchListView   collection: @toWatchList, el: @$('.to-watch-list')
 
   render:->
-    $(@el).html """
+    @$el.html """
       <div class="container">
         <h1>To-Watch</h1>
         <div class="new"></div>
@@ -126,4 +126,5 @@ class window.AppView extends Backbone.View
       </div>
       <div class="ribbon">
         <a href="https://github.com/epidemian/to-watch-list">Fork me on GitHub</a>
-      </div>"""
+      </div>
+    """
