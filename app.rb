@@ -13,10 +13,10 @@ class ToWatch
   include DataMapper::Resource
 
   property :id,         Serial
-  property :comment,    Text,     :default => ''
-  property :link,       String,   :required => true
-  property :title,      String
-  property :watched,    Boolean,  :default => false
+  property :comment,    Text,    :default => ''
+  property :link,       Text,    :required => true
+  property :title,      Text
+  property :watched,    Boolean, :default => false
 end
 
 DataMapper.auto_upgrade!
