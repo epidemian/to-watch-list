@@ -2,6 +2,7 @@ source :rubygems
 gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'coffee-script'
+gem 'therubyracer'
 gem 'sass'
 gem 'json'
 gem 'nokogiri'
