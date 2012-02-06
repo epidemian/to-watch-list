@@ -10,7 +10,7 @@ require 'nokogiri'
 db_url = ENV['DATABASE_URL']
 if db_url
   # If a database URL is passed (e.g. on Heroku), connect to that database.
-  Sequel.connect :database_url
+  Sequel.connect database_url
 else
   # Use in-memory database.
   db = Sequel.sqlite
