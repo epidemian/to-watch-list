@@ -1,25 +1,37 @@
 require 'rubygems'
 require 'sinatra'
 require 'sinatra/reloader' if development?
-require 'data_mapper'
+require 'sequel'
 require 'json'
 require 'open-uri'
 require 'nokogiri'
 
-database_url = ENV['DATABASE_URL'] || 'mysql://localhost/sinatra_development'
-DataMapper.setup :default, database_url
+# Connect to database.
+db_url = ENV['DATABASE_URL']
+if db_url
+  # If a database URL is passed (e.g. on Heroku), connect to that database.
+  Sequel.connect :database_url
+else
+  # Use in-memory database.
+  db = Sequel.sqlite
 
-class ToWatch
-  include DataMapper::Resource
-
-  property :id,         Serial
-  property :comment,    Text,    :default => ''
-  property :link,       Text,    :required => true
-  property :title,      Text
-  property :watched,    Boolean, :default => false
+  # And create database schema for development.
+  db.create_table :to_watches do
+    primary_key :id
+    text :comment
+    text :link, :null => false
+    text :title
+    TrueClass :watched, :default => false
+  end
 end
 
-DataMapper.auto_upgrade!
+# Prevent Model::update from raising exceptions when trying to update a
+# restricted field (like an id). Useful when updating things from JSON.
+Sequel::Model.strict_param_setting = false
+
+class ToWatch < Sequel::Model
+  plugin :json_serializer, :naked => true
+end
 
 set :default_encoding => "utf-8"
 
@@ -52,7 +64,7 @@ end
 
 get '/towatch/:id', :provides => :json do
   id = params[:id].to_i
-  tw = ToWatch.get id
+  tw = ToWatch[id]
 
   return 404 if tw.nil?
   tw.to_json
@@ -60,7 +72,7 @@ end
 
 put '/towatch/:id', :provides => :json do
   id   = params[:id].to_i
-  tw   = ToWatch.get id
+  tw   = ToWatch[id]
   text = request.body.read
   json = JSON.parse text
 
@@ -73,9 +85,10 @@ end
 
 delete '/towatch/:id' do
   id = params[:id].to_i
-  tw = ToWatch.get id
+  tw = ToWatch[id]
   return 404 if tw.nil?
   tw.destroy
+  200
 end
 
 # Return a convenient title for a link.
