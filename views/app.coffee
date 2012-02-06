@@ -22,14 +22,18 @@ class ToWatchView extends Backbone.View
     @render()
 
   render:=>
-    watched = @model.get 'watched'
-    if @$el.text() == ''
+    # Renders the template only once. Prevents from re-creating a field when the
+    # user is typing in it.
+    unless @$el.text()
+      # TODO The entity &#10006; is "heavy multiplication x", but for some
+      # encoding problem I could not use it directly here :(
       @$el.html """
         <input type="checkbox" />
         <a class="title" target="_blank"></a>
         <p class="comment" contenteditable />
         <div class="delete" title="Delete">&#10006;</div>
-      """ # TODO The entity &#10006; is "heavy multiplication x", but for some encoding problem I could not use it directly here :(
+      """
+    watched = @model.get 'watched'
     @$(':checkbox').prop
       'checked': watched
       'title': "Mark as #{if watched then 'unwatched' else 'watched'}"

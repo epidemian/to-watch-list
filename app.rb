@@ -31,6 +31,10 @@ Sequel::Model.strict_param_setting = false
 
 class ToWatch < Sequel::Model
   plugin :json_serializer, :naked => true
+  def link= new_link
+    self.title = get_title_for_link new_link if new_link != self.link
+    super new_link
+  end
 end
 
 set :default_encoding => "utf-8"
@@ -53,10 +57,7 @@ end
 post '/towatch', :provides => :json do
   req  = request.body.read
   json = JSON.parse req
-  tw   = ToWatch.new json
-
-  tw.title = get_title_for_link tw.link if tw.title.nil?
-  tw.save
+  tw   = ToWatch.create json
 
   return 400, tw.errors.to_hash.to_json unless tw.valid?
   tw.to_json
