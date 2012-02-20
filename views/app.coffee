@@ -52,7 +52,6 @@ class ToWatchView extends Backbone.View
 
   updateCommentOnEnter:(event)->
     if event.keyCode == 13
-      @updateComment()
       @$('.comment').blur()
 
   delete:->
