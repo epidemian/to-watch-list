@@ -14,6 +14,7 @@ class ToWatchView extends Backbone.View
     'click :checkbox':        'toggleWatched'
     'blur .comment':          'updateComment'
     'keydown .comment':       'updateCommentOnEnter'
+    'focus .comment':         'removeCommentPlaceholder'
     'click .delete':          'delete'
 
   initialize:->
@@ -40,6 +41,7 @@ class ToWatchView extends Backbone.View
     @$('.title').text @model.get('title') || @model.get('link')
     @$('.title').prop 'href', @model.get('link')
     @$('.comment').text @model.get 'comment'
+    @$('.comment').addClass 'empty-comment' unless @model.get 'comment'
     @
 
   toggleWatched:->
@@ -49,10 +51,15 @@ class ToWatchView extends Backbone.View
   updateComment:->
     @model.set comment: @$('.comment').text()
     @model.save()
+    @$('.comment').addClass 'empty-comment' unless @$('.comment').text()
 
   updateCommentOnEnter:(event)->
+    @$(event.target).removeClass 'empty-comment'
     if event.keyCode == 13
       @$('.comment').blur()
+
+  removeCommentPlaceholder:->
+    @$('.comment').removeClass 'empty-comment' if @$('.comment').text()
 
   delete:->
     @model.destroy()
